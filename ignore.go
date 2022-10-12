@@ -17,6 +17,14 @@ func main() {
 
 	if *language != "" {
 		log.Println("Downloading gitignore from the ", *language, " language")
+		content, err := GetRawFileContent(NormalizeUserInput(*language))
+		if err != nil {
+            log.Fatalln(err)
+		}
+
+		if err := HandleFile(content); err != nil {
+			log.Fatalln(err)
+		}
 	} else {
 		log.Fatalln("Language not specified")
 	}
