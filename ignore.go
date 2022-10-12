@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"log"
 	"flag"
 	"net/http"
@@ -31,7 +30,12 @@ func main() {
 }
 
 func HandleFile(content string) error {
-	return
+	err := ioutil.WriteFile(".gitignore", []byte(content), 0644)
+    if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetRawFileContent(lang string) (string, error) {
