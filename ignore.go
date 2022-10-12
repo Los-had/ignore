@@ -1,11 +1,14 @@
 package main
 
 import (
+	"os"
 	"log"
 	"flag"
+	"strings"
 	"net/http"
 	"io/ioutil"
-	"strings"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var RawGithubURL = "https://raw.githubusercontent.com/github/gitignore/main/"
@@ -24,13 +27,14 @@ func main() {
 		if err := HandleFile(content); err != nil {
 			log.Fatalln(err)
 		}
+		log.Println("Finished downloading gitignore file")
 	} else {
 		log.Fatalln("Language not specified")
 	}
 }
 
 func HandleFile(content string) error {
-	err := ioutil.WriteFile(".gitignore", []byte(content), 0644)
+	err := os.WriteFile(".gitignore", []byte(content), 0644)
     if err != nil {
 		return err
 	}
@@ -41,12 +45,14 @@ func HandleFile(content string) error {
 func GetRawFileContent(lang string) (string, error) {
 	resp, err := http.Get(RawGithubURL + lang + ".gitignore")
 	if err != nil {
+		log.Println("Request failed")
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Println("Fail parsing the response body")
         return "", err
     }
 
@@ -54,5 +60,6 @@ func GetRawFileContent(lang string) (string, error) {
 }
 
 func NormalizeUserInput(input string) string {
-	return strings.Title(strings.ToLower(input))
+	caser := cases.Title(language.Und)
+	return caser.String(strings.ToLower(strings.TrimSpace(input)))
 }
