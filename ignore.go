@@ -61,5 +61,5 @@ func GetRawFileContent(lang string) (string, error) {
 
 func NormalizeUserInput(input string) string {
 	caser := cases.Title(language.Und)
-	return caser.String(strings.ToLower(strings.TrimSpace(input)))
+	return caser.String(strings.TrimSpace(input))
 }
