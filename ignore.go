@@ -35,7 +35,18 @@ func HandleFile(content string) error {
 }
 
 func GetRawFileContent(lang string) (string, error) {
-	return
+	resp, err := http.Get(RawGithubURL + lang + ".gitignore")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+        return "", err
+    }
+
+	return string(body), nil
 }
 
 func NormalizeUserInput(input string) string {
