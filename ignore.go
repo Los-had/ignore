@@ -31,5 +31,5 @@ func GetRawFileContent(lang string) (string, error) {
 }
 
 func NormalizeUserInput(input string) string {
-	return
+	return strings.Title(strings.ToLower(input))
 }
